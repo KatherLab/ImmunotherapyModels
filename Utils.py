@@ -4,7 +4,6 @@ Created on Sun Jan 10 16:05:36 2021
 
 @author: Narmin Ghaffari Laleh
 """
-import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -98,8 +97,8 @@ def Detect_Trend_Of_Data(vector):
         trend = 'Fluctuate'
     return trend
 
-# =============================================================================
-            
+###############################################################################
+
 def Write_On_Result_dict(resultDict, arm, trend, categories, values):
 
     noCateg = len(categories)
@@ -108,6 +107,44 @@ def Write_On_Result_dict(resultDict, arm, trend, categories, values):
     return resultDict
 
 ###############################################################################
+
+def Plot(resultDict, arm, trend, item, isPrediction = True, lineCol = '#3288bd', dotCol = '#d73027', i = 0):
+         
+    fig, ax = plt.subplots()
+    plt.plot(resultDict[arm][trend]['time'][item], resultDict[arm][trend]['dimension'][item] * 1000, 'o', c = dotCol, label='data', markersize = 15)
+    if isPrediction:
+        p = [i * 1000 for i in resultDict[arm][trend]['prediction'][item]]
+        plt.plot(resultDict[arm][trend]['time'][item], p, c = lineCol, ls = '-', lw = 5, label='Fit')
+        
+    plt.legend(loc='best', fontsize = 30 )
+    ax.set_aspect(1.0/ax.get_data_ratio(), adjustable='box')
+    plt.xticks(fontsize = 30)
+    plt.yticks(fontsize = 30)    
+    plt.xlabel('Time (weeks)', fontsize = 30)  
+    ax.set_ylabel(r'Volume (mm^3) [x 10^{-3}]', fontsize = 30)
+    plt.title('R-Square for Fit: ' + str(np.round(r2_score(resultDict[arm][trend]['dimension'][item], resultDict[arm][trend]['prediction'][item]), 3)),
+              fontsize = 30)
+    
+###############################################################################
+
+def Print_Statistics(resultDict, arms, trends, categories):
+
+    for arm in arms:
+        for trend in trends:
+            for categ in categories:
+                print(categ +  ' for ' + arm + ' ' + trend + ' is: ' + str(np.round(np.nanmean(resultDict[arm][trend][categ]), 3)))
+       
+            temp = [i for i in list(resultDict[arm][trend]['rSquare']) if str(i) == 'nan']
+            print('Number of Nan for ' + arm + ' ' + trend + ' is: ' + str(len(temp)))
+
+
+
+
+
+
+
+
+
 
 
 

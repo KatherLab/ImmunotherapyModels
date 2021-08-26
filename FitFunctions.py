@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Created on Sun Jan 10 16:51:31 2021
 
@@ -30,16 +29,7 @@ def Select_Fucntion(functionName):
             Ca0 = v0
             Casol = odeint(myode, Ca0, t)
             return Casol[:,0]
-        
-    elif functionName == 'HyperLogistic' :
-        def fitfunc(t, alpha, beta, p, v0):     
-            def myode(dim, t):
-                return (alpha / beta)* (dim **(1-p))*((beta-dim)**(1+p))    
-                #return alpha * dim*(2*np.exp(-p * t)/ 1 + np.exp(-p * t))
-            Ca0 = v0
-            Casol = odeint(myode, Ca0, t)
-            return Casol[:,0]
-        
+                
     elif functionName == 'ClassicBertalanffy' :
         def fitfunc(t, alpha, beta, v0):     
             def myode(dim, t):
@@ -69,13 +59,6 @@ def Select_Fucntion(functionName):
             Ca0 = v0
             Casol = odeint(myode, Ca0, t)
             return Casol[:,0]
-    elif functionName == 'Bernoulli' :
-        def fitfunc(t, alpha, beta, lamda, v0):     
-            def myode(dim, t):
-                return (alpha * dim) - beta *(dim ** lamda)    # Bernoulli
-            Ca0 = v0
-            Casol = odeint(myode, Ca0, t)
-            return Casol[:,0]
     return fitfunc
 
 ##############################################################################
@@ -88,6 +71,7 @@ def sumOfSquaredError(parameterTuple):
 ##############################################################################
         
 def generate_Initial_Parameters_genetic(ff, k, boundry, t, d, seed = 23, strategy = 'best1bin'):
+
     global fitFunc
     fitFunc= ff
     global time
@@ -100,4 +84,6 @@ def generate_Initial_Parameters_genetic(ff, k, boundry, t, d, seed = 23, strateg
         parameterBounds.append(boundry)
     result = differential_evolution(sumOfSquaredError, parameterBounds, seed = seed, strategy = strategy)
     
-    return result.x    
+    return result.x  
+
+##############################################################################    
